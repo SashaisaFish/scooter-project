@@ -25,14 +25,15 @@ describe("Test scooter initialises", () => {
 });
 
 describe("Test rent()", () => {
-  test("Test rent() changes docked to false", () => {
     const rentScooter = new Scooter("Manhattan", "user2");
     rentScooter.charge = 90;
+
+  test("Test rent() changes docked to false", () => {
     rentScooter.rent();
     expect(rentScooter.docked).toBeFalsy();
   });
   test("Test rent() logs Enjoy the ride!", () => {
-    expect(scoot.rent()).toEqual("Enjoy the ride!");
+    expect(rentScooter.rent()).toEqual("Enjoy the ride!");
   });
   const brokenError = () => {
     scoot.charge = 30;

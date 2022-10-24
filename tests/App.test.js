@@ -45,7 +45,7 @@ describe("Test register(user)", () => {
     app1.register(user3);
     expect(app1.registeredUsers).toEqual({
       username3: {
-        password: user3.password,
+        password: user3._password,
         age: user3.age,
         loggedIn: false,
         accountChange: 0,
@@ -99,13 +99,21 @@ describe("Test addScooter(location, scooter)", () => {
     };
     expect(stationError).toThrow("Madison is not a station.");
   });
+
+  test("throw error if no args passed", () => {
+    const argError = () => {
+      appx.addScooter();
+    };
+    expect(argError).toThrow("Please enter a location and scooter");
+  });
 });
 
 describe("Test removeScooter(scooterToRemove)", () => {
   const appx = new ScooterApp();
   const user1 = new User("username1", "password1", 20);
   const scooter = new Scooter("Brooklyn", user1);
-  // const scooter2 = new Scooter("Manhattan", user1)
+  const scooter2 = new Scooter("Manhattan", user1)
+  const scooter3 = new Scooter("Brooklyn", user1)
   appx.addScooter("Manhattan", scooter);
 
   test("removeScooter removes from list", () => {
@@ -118,11 +126,20 @@ describe("Test removeScooter(scooterToRemove)", () => {
     });
   });
 
-  test("throws error if scooter not found", () => {
+  test("throws error if no scooters in location", () => {
     const notFoundError = () => {
       appx.removeScooter(scooter2);
     };
     expect(notFoundError).toThrow("Scooter not found.");
+  });
+
+  test("throws error if scooter not found in location", () => {
+    const notFoundError2 = () => {
+      appx.addScooter("Brooklyn", scooter)
+      appx.addScooter("Brooklyn", scooter2)
+      appx.removeScooter(scooter3);
+    };
+    expect(notFoundError2).toThrow("Scooter not found.");
   });
 
 });

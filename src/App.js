@@ -25,7 +25,7 @@ class ScooterApp {
 
     // create object with required data pulled from user
     const userObj = {
-      password: user.password,
+      password: user._password,
       age: user.age,
       loggedIn: false,
       accountChange: 0,
@@ -80,12 +80,16 @@ class ScooterApp {
 
   addScooter(location, scooter) {
     const stationsArray = Object.keys(this.stations);
-    if (stationsArray.includes(location)) {
-      scooter.station = location;
-      this.stations[location].push(scooter);
-      console.log("Scooter has been added.");
+    if (location === undefined || scooter === undefined) {
+      throw "Please enter a location and scooter";
     } else {
-      throw `${location} is not a station.`;
+      if (stationsArray.includes(location)) {
+        scooter.station = location;
+        this.stations[location].push(scooter);
+        console.log("Scooter has been added.");
+      } else {
+        throw `${location} is not a station.`;
+      }
     }
   }
 
@@ -95,56 +99,32 @@ class ScooterApp {
     // find station of scooter
     const location = scooterToRemove.station;
 
-    // look in the value of that station
     // currentStation is an array of Objects of Scooter class
     const currentStation = this.stations[location];
-    console.log("current station:", currentStation);
-const allSerials = [];
-    // iterate through objects in array and check if i[serial] === serial
-    for (let i = 0; i < currentStation.length; i++) {
-      
-      console.log("current index serial: ", currentStation[i].serial);
-      console.log("scooter serial: ", scooterToRemove.serial);
-      // check serial of current index of array
-      // if it matches, remove from currentStation and log message
-      if (currentStation[i].serial === scooterToRemove.serial) {
-        currentStation.splice(i, 1);
-        console.log("Scooter has been removed.");
-        return true;
-      } 
-      // if it does not match, push to allSerials array
-      else {
-        allSerials.push(currentStation[i].serial);
-        console.log(allSerials)
+    console.log(currentStation)
+    if (currentStation[0] === undefined) {
+        throw "Scooter not found."
+    } else {
+      // declare test value
+      let exists = false;
+
+      for (let i = 0; i < currentStation.length; i++) {
+        // check serial of current index of array
+        // if it matches, remove from currentStation and log message
+        if (currentStation[i].serial === scooterToRemove.serial) {
+          currentStation.splice(i, 1);
+          console.log("Scooter has been removed.");
+          exists = true;
+          break;
+        }
+
+        // if loop reaches the end and still no match found, throw error
+        if (i === currentStation.length - 1 && exists === false) {
+          throw "Scooter not found.";
+        }
       }
     }
-    if(!allSerials.includes(scooterToRemove.serial)){
-      throw "Scooter not found.";
-    }
-    
   }
 }
 
-const appx = new ScooterApp();
-const userx = new User("usernamex", "passwordx", 20);
-const scooterx = new Scooter("Manhattan", userx);
-const scootery = new Scooter("Brooklyn", userx);
-const scooterz = new Scooter("Queens", userx);
-// console.log(0, appx.stations)
-appx.addScooter("Brooklyn", scooterx);
-//console.log(1, appx.stations);
-appx.addScooter("Bronx", scootery);
-//console.log(2, appx.stations);
-appx.addScooter("Manhattan", scooterz);
-// console.log(3, appx.stations)
-console.log(appx.removeScooter(scooterx));
-// console.log(2, appx.stations)
-
-// console.log(appx.stations)
-// const usery = new User("usernamey", "passwordy", 28);
-// appx.register(userx);
-// appx.register(usery);
-
-// console.log(appx.logIn("usernamex", "passwordx"));
-// // console.log(appx.register(userx))
 module.exports = ScooterApp;
