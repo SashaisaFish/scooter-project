@@ -4,7 +4,10 @@
   "description": "An Electric Scooter Hire app system, created using UML, OOP, JS Classes and TDD",
   "main": "Application.js",
   "scripts": {
-    "test": "jest --watch-all --verbose",
+    "test": "jest --verbose",
+    "test:Scooter": "jest ./tests/Scooter --watch-all --verbose",
+    "test:User": "jest ./tests/User --watch-all --verbose",
+    "test:App": "jest ./tests/App --watch-all --verbose",
     "test:coverage": "jest --verbose --collect-coverage"
   },
   "repository": {

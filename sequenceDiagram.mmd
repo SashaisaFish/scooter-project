@@ -1,0 +1,72 @@
+sequenceDiagram
+participant ScooterApp
+actor User
+participant Scooter
+
+Note over User: User attempts to register
+User ->> ScooterApp: register
+alt User is over 17 and not yet registered
+    ScooterApp -->> User: "User has been registered"
+  else User is 17 or under
+    ScooterApp -->> User: "User is too young"
+  else User exists in registeredUsers
+    ScooterApp -->> User: "User is already registered"
+end
+
+Note over User: User attempts to login
+User ->> ScooterApp: logIn
+alt Username and password is correct
+    ScooterApp -->> User: "Login successful"
+  else Username not in registeredUsers
+    ScooterApp -->> User: "Username is incorrect"
+  else Password does not match Username object
+    ScooterApp -->> User: "Password is incorrect"
+end   
+
+Note over User: User attempts to rent
+User ->> Scooter: rent
+alt Scooter is working and has enough charge
+    par Scooter is activated
+        activate Scooter
+      and App removes Scooter from station
+        Scooter -->> ScooterApp: Info: Serial
+        ScooterApp ->> Scooter: removeScooter
+      and App gives message to User
+        Scooter -->> User: "Enjoy the ride!"
+    end
+  else Scooter is out of charge
+    ScooterApp -->> User: "Scooter low on battery, please charge."
+    User ->> Scooter: recharge
+    activate Scooter
+    Scooter -->> User: "Starting charge"
+    Scooter -->> User: "Charge complete"
+    deactivate Scooter
+    Note over Scooter: Scooter can now be rented
+    par App removes Scooter from station
+        Scooter -->> ScooterApp: Info: Serial
+        ScooterApp ->> Scooter: removeScooter
+      and App gives message to User
+        Scooter -->> User: "Enjoy the ride!"
+    end
+  else Scooter is broken
+    ScooterApp -->> User: "Scooter is broken, please send a repair request."
+    User ->> Scooter: requestRepair
+    activate Scooter
+    Scooter -->> User: "Starting repair"
+    Scooter -->> User: "Repair complete"
+    deactivate Scooter
+    Note over Scooter: Scooter can now be rented
+    par App removes Scooter from station
+        Scooter -->> ScooterApp: Info: Serial
+        ScooterApp ->> Scooter: removeScooter
+      and App gives message to User
+        Scooter -->> User: "Enjoy the ride!"
+    end
+end
+Note over User: User is finished and docks Scooter
+User -->> Scooter: dock
+deactivate Scooter
+Scooter -->> ScooterApp: Info: Location
+ScooterApp ->> Scooter: addScooter
+
+
