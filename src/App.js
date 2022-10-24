@@ -44,8 +44,9 @@ class ScooterApp {
       console.log(`${user.username} is too young to register`);
       throw `${user.username} is too young to register`;
     }
-    // if both checks pass, update registered users with userObj as value and username as key
+    // if both checks pass, register user
     else {
+      // update registeredUsers with userObj as value and username as key
       this.registeredUsers[user.username] = userObj;
       console.log(`${user.username} has been registered`);
     }
@@ -62,16 +63,15 @@ class ScooterApp {
 
       // if password matches with inputted password, allow login
       if (user.password === password) {
+        // update user loggedIn property
         user.loggedIn = true;
         console.log("Login successful.");
       }
-
       // if password does not match, throw password error
       else {
         throw "Password is incorrect";
       }
     }
-
     // if array does not include inputted username, throw username error
     else {
       throw "Username is incorrect";
@@ -79,29 +79,35 @@ class ScooterApp {
   }
 
   addScooter(location, scooter) {
+    // declare station keys as stationsArray for easier searching
     const stationsArray = Object.keys(this.stations);
+
+    // if no args, throw error
     if (location === undefined || scooter === undefined) {
       throw "Please enter a location and scooter";
     } else {
+      // if the inputted location exists as a station
       if (stationsArray.includes(location)) {
+        // update scooter station property
         scooter.station = location;
+        // add scooter to station
         this.stations[location].push(scooter);
         console.log("Scooter has been added.");
-      } else {
+      } 
+      // if input does not exist, throw error
+      else {
         throw `${location} is not a station.`;
       }
     }
   }
 
   removeScooter(scooterToRemove) {
-    // for key value pairs of this.stations,
-
     // find station of scooter
     const location = scooterToRemove.station;
 
     // currentStation is an array of Objects of Scooter class
     const currentStation = this.stations[location];
-    console.log(currentStation)
+    // if current station is empty, throw error
     if (currentStation[0] === undefined) {
         throw "Scooter not found."
     } else {
